@@ -1,14 +1,10 @@
 import Vue from "vue";
-import '../router/router.js';
-import VModel from 'vue-js-modal'
-import BootstrapVue from "bootstrap-vue";
-import Index from './index.vue'
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
-
-Vue.use(VModel)
-Vue.use(BootstrapVue);
+import '../../common/index';
+import Index from './index.vue';
 
 new Vue({
+    // el: "#app",
     render: h => h(Index),
+    // components: { Product, Category },
+    // template: Product
 }).$mount('#app');
