@@ -13,7 +13,7 @@
         </div>
       </div>
       <div>
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName" class="mt-5">
           <el-tab-pane label="Describe" name="first">{{
             product.describe
           }}</el-tab-pane>
@@ -27,12 +27,9 @@
 </template>
 
 <script>
-import Vue from "vue";
 import axios from "axios";
-import VueAxios from "vue-axios";
 import Carousel from "./components/carousel.vue";
 import productSelect from "./components/productSelect.vue";
-Vue.use(VueAxios, axios);
 
 export default {
   components: { Carousel, productSelect },
