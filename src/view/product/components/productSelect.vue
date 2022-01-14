@@ -22,14 +22,30 @@
         </el-select>
       </div>
     </div>
+
+    <el-row>
+      <el-input-number
+        v-model="quantity"
+        :min="1"
+        :max="10"
+        class="mt-5"
+      ></el-input-number>
+    </el-row>
+    <el-row>
+      <el-button
+        class="mt-5"
+        @click="addCart"
+        type="primary"
+        :disabled="token == ''"
+        >Add Cart</el-button
+      >
+    </el-row>
   </div>
 </template>
 
 <script>
-import Vue from "vue";
 import axios from "axios";
-import VueAxios from "vue-axios";
-Vue.use(VueAxios, axios);
+import Identification from "../../../common/Identification.js";
 
 export default {
   created: function () {
@@ -38,6 +54,7 @@ export default {
     if (parsed.id != undefined) {
       this.productId = parsed.id;
     }
+    this.token = Identification.token;
   },
   data() {
     return {
@@ -49,6 +66,7 @@ export default {
       PreviousSpecifications: [4],
       changeSpecification: [],
       inventoryId: 0,
+      token: "",
     };
   },
   mounted() {
@@ -79,49 +97,62 @@ export default {
       }
     },
     selectGet: function (rowId) {
-      console.log(rowId);
-      //   var selected =
-      //     "rowId: " + rowId + ", target.value: " + event.target.value;
       this.getSpecification(rowId);
     },
-    getSpecification: function (specificationId) {
-      axios
-        .post(
+    async getSpecification(specificationId) {
+      try {
+        const response = await axios.post(
           "http://localhost:5002/api/ProductSpecification/nextSpecification",
           {
             ProductId: this.productId,
             specifications: [specificationId],
             SpecificationContents: this.changeSpecification,
           }
-        )
-        .then((response) => {
-          if (typeof response.data.quantity !== "number") {
-            this.specifications = response.data.$values;
-          } else {
-            this.inventoryId = response.data.id;
-            this.quantity = response.data.quantity;
-          }
-        });
+        );
+        if (typeof response.data.quantity !== "number") {
+          this.specifications = response.data.$values;
+        } else {
+          this.inventoryId = response.data.id;
+          this.quantity = response.data.quantity;
+        }
+      } catch (error) {}
     },
-    addCart: function () {
-      axios
-        .post(
+    async addCart() {
+      console.log(this.token);
+      if (this.token == "") {
+        this.message("請先登入", "warning");
+      } else {
+        let response = await axios.post(
           "http://localhost:5002/api/Cart",
           {
             InventoryId: this.inventoryId,
-            Quantity: 1,
+            Quantity: this.quantity,
             Attribute: 1,
           },
           {
             headers: {
-              Authorization: `Basic ${identification.token}`,
+              Authorization: `Basic ${this.token}`,
             },
           }
-        )
-        .then((response) => {
-          console.log(response);
-          sweetAlert("Cart", "Success add to shopping cart", "success");
-        });
+        );
+
+        try {
+          if (response.response && response.response.status == 200) {
+            this.message("success add cart", "success");
+          } else {
+            this.message(response.response.data, "error");
+          }
+        } catch (error) {
+          console.log(error);
+          this.message("Oops,this is error message", "error");
+        }
+      }
+    },
+    message(message, type) {
+      this.$message({
+        message: message,
+        type: type,
+      });
     },
   },
 };
