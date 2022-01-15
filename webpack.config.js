@@ -1,6 +1,8 @@
 const path = require("path");
 var glob = require('glob');
-const { VueLoaderPlugin } = require('vue-loader')
+const { VueLoaderPlugin } = require('vue-loader');
+const Dotenv = require('dotenv-webpack');
+
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 let fs = require('fs');
 
@@ -85,7 +87,8 @@ module.exports = {
   },
   plugins: [
     // make sure to include the plugin for the magic
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new Dotenv()
   ]
 }
 
