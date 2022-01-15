@@ -1,5 +1,6 @@
 import Vue from "vue";
-import axios from "axios";
+import { identity } from "../api/user";
+
 const identification = new Vue({
     data() {
         return {
@@ -12,14 +13,9 @@ const identification = new Vue({
         this.token = localStorage.getItem('user');
     },
     methods: {
-         verification() {
+        verification() {
             try {
-                let response = axios.get("http://localhost:5002/api/User/identity/verification",
-                    {
-                        headers: {
-                            'Authorization': `Basic ${this.token}`
-                        }
-                    });
+                let response = identity(this.token);
                 this.checkLogin = true;
             } catch (error) {
                 console.log(error);
