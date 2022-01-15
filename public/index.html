@@ -3,10 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=1"
+    />
   </head>
   <body>
     <div id="header"></div>
-    <div id="app"></div>
-    <%= htmlWebpackPlugin.options.footer %>
+    <div class="container">
+      <div id="app"></div>
+    </div>
+    <div id="footer"></div>
   </body>
 </html>

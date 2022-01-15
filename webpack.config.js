@@ -1,6 +1,8 @@
 const path = require("path");
 var glob = require('glob');
-const { VueLoaderPlugin } = require('vue-loader')
+const { VueLoaderPlugin } = require('vue-loader');
+const Dotenv = require('dotenv-webpack');
+
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 let fs = require('fs');
 
@@ -13,12 +15,15 @@ var getEntry = function (globPath) {
     if (entry.split('/').splice(-2)[0] == "index") {
       entries['index'] = [entry];
     } else {
-      var pathname = entry.split('/').splice(-2).join('/').split('.')[0];
+      if (entry.split('/').splice(-2)[1] == "index.js") {
+        var pathname = entry.split('/').splice(-2).join('/').split('.')[0];
+      } else {
+        var pathname = entry.split('/').splice(-2).join('/').split('.')[0] + '/index';
+      }
       entries[pathname] = [entry];
     }
 
   });
-  console.log(entries);
   return entries;
 };
 var isProduction = process.env.NODE_ENV === 'production';
@@ -71,7 +76,7 @@ module.exports = {
     },
     port: 3000,
     compress: true,
-    historyApiFallback: true,
+    // historyApiFallback: true,
   },
   resolve: {
     extensions: ['.js', '.vue'],
@@ -82,12 +87,13 @@ module.exports = {
   },
   plugins: [
     // make sure to include the plugin for the magic
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new Dotenv()
   ]
 }
 
 // const header = fs.readFileSync('./src/view/layout/header.html');
-const footer = fs.readFileSync('./src/view/layout/footer.html');
+// const footer = fs.readFileSync('./src/view/layout/footer.html');
 
 // 生成HTML文件
 chunks.forEach(function (pathname) {
@@ -104,7 +110,7 @@ chunks.forEach(function (pathname) {
       collapseWhitespace: false
     },
     // header:header,
-    footer:footer
+    // footer: footer
   };
   if (pathname in module.exports.entry) {
     conf.chunks = ['vendor', pathname];

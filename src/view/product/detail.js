@@ -1,10 +1,11 @@
 import Vue from "vue";
 import '../../common/index';
-import Index from './index.vue';
+import Detail from './detail.vue';
 
 new Vue({
     // el: "#app",
-    render: h => h(Index),
+    // render: h => h(List),
+    components: { Detail },
     // components: { Product, Category },
-    // template: Product
+    template: "<Detail></Detail>"
 }).$mount('#app');
