@@ -11,15 +11,25 @@
     >
       <el-menu-item index="1">Processing Center</el-menu-item>
       <el-submenu index="2">
-        <template slot="title">Workspace</template>
-        <el-menu-item index="2-1">item one</el-menu-item>
-        <el-menu-item index="2-2">item two</el-menu-item>
-        <el-menu-item index="2-3">item three</el-menu-item>
-        <el-submenu index="2-4">
-          <template slot="title">item four</template>
-          <el-menu-item index="2-4-1">item one</el-menu-item>
-          <el-menu-item index="2-4-2">item two</el-menu-item>
-          <el-menu-item index="2-4-3">item three</el-menu-item>
+        <template slot="title">分類</template>
+
+        <el-submenu
+          v-for="(category, key) in categories"
+          :key="key"
+          :index="2 + '-' + key"
+        >
+          <template slot="title">{{ category.name }}</template>
+          <el-menu-item :index="category.id + '-all'" @select="handleSelect"
+            >全部</el-menu-item
+          >
+          <el-menu-item
+            v-for="(childrenCategory, childrenCategoryKey) in category
+              .childrenCategories.$values"
+            :key="childrenCategoryKey"
+            :index="category.id + '-' + childrenCategory.id"
+            @select="handleSelect"
+            >{{ childrenCategory.name }}</el-menu-item
+          >
         </el-submenu>
       </el-submenu>
       <el-menu-item index="3" disabled>Info</el-menu-item>
@@ -30,16 +40,33 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       activeIndex: "1",
       activeIndex2: "1",
+      categories: null,
     };
+  },
+  created: function () {
+    this.getCategory();
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+      console.log(keyPath);
+      if (key.split("-")[1] == "all") {
+        location.href = "/product?categoryId=" + key.split("-")[0];
+      }
+    },
+    async getCategory() {
+      const response = await axios.get("http://localhost:5002/api/Category/1");
+      try {
+        this.categories = response.data.$values.splice(0, 4);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
