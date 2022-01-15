@@ -1,5 +1,9 @@
 <template>
   <div>
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item>分類</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ category.name }}</el-breadcrumb-item>
+    </el-breadcrumb>
     <div
       class="mt-3"
       v-for="(productCategories, index) in products"
@@ -35,16 +39,14 @@
 
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-
-Vue.use(VueAxios, axios);
+import { getProductCategory } from "../../api/product";
+import { getCategoryList } from "../../api/category";
 
 export default {
   data() {
     return {
       products: [],
+      category: { name: "" },
       imagePath: "~/img/",
       categoryId: 1,
     };
@@ -57,14 +59,13 @@ export default {
     }
   },
   async mounted() {
+    this.getCategory();
     this.getProducts();
   },
   methods: {
     async getProducts() {
-      var response = await axios.get(
-        "http://localhost:5002/api/Product/category/" + this.categoryId + "/1"
-      );
       try {
+        var response = await getProductCategory(this.categoryId, 1);
         var product = [];
         var count = 0;
         response.data.$values.forEach((item, index) => {
@@ -82,6 +83,12 @@ export default {
           }
         });
         this.products.push(product);
+      } catch (error) {}
+    },
+    async getCategory() {
+      try {
+        var response = await getCategoryList(this.categoryId);
+        this.category = response.data;
       } catch (error) {}
     },
   },

@@ -9,7 +9,7 @@
       text-color="#fff"
       active-text-color="#ffd04b"
     >
-      <el-menu-item index="1">Processing Center</el-menu-item>
+      <el-menu-item index="1" onclick="location.href='/'">Store</el-menu-item>
       <el-submenu index="2">
         <template slot="title">分類</template>
 
@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import { getCategoryList } from "../../api/category";
 
 export default {
   data() {
@@ -55,13 +55,12 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(keyPath);
       if (key.split("-")[1] == "all") {
         location.href = "/product?categoryId=" + key.split("-")[0];
       }
     },
     async getCategory() {
-      const response = await axios.get("http://localhost:5002/api/Category/1");
+      const response = await getCategoryList(1);
       try {
         this.categories = response.data.$values.splice(0, 4);
       } catch (error) {

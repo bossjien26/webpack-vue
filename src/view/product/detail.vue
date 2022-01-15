@@ -1,5 +1,14 @@
 <template>
-  <div class="container mt-5 mb-5">
+  <div class="mt-5 mb-5">
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item>分類</el-breadcrumb-item>
+      <el-breadcrumb-item
+        ><a :href="'/product?categoryId=' + category.id">{{
+          category.name
+        }}</a></el-breadcrumb-item
+      >
+      <el-breadcrumb-item>{{ product.name }}</el-breadcrumb-item>
+    </el-breadcrumb>
     <b-card-title class="text-center">
       <b-card-text class="mb-5">
         {{ product.name }}
@@ -27,7 +36,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getProductDetail } from "../../api/product";
+import { getCategoryDetail } from "../../api/category";
 import Carousel from "./components/carousel.vue";
 import productSelect from "./components/productSelect.vue";
 
@@ -36,11 +46,19 @@ export default {
   created: function () {
     const queryString = require("query-string");
     const parsed = queryString.parse(location.search);
+    var url = new URL(document.referrer);
+    var beforeParsed = url.searchParams.get("categoryId");
+    console.log(beforeParsed);
+
     if (parsed.id != undefined) {
       this.productId = parsed.id;
     }
+    if (beforeParsed != undefined) {
+      this.categoryId = beforeParsed;
+    }
   },
   async mounted() {
+    this.getCategory();
     this.getProduct();
   },
   data() {
@@ -49,18 +67,24 @@ export default {
       imagePath: "~/img/",
       productId: 0,
       activeName: "first",
+      category: { name: "" },
+      categoryId: 0,
     };
   },
   methods: {
     async getProduct() {
       try {
-        let response = await axios.get(
-          "http://localhost:5002/api/Product/detail/" + this.productId
-        );
+        let response = getProductDetail(this.productId);
         this.product = response.data.product;
       } catch (err) {
         console.log(err);
       }
+    },
+    async getCategory() {
+      try {
+        var response = await getCategoryDetail(this.categoryId);
+        this.category = response.data;
+      } catch (error) {}
     },
   },
 };

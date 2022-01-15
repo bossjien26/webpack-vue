@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getProductSpecification } from "../../../api/productSpecification";
+import { addCart } from "../../../api/cart";
 import Identification from "../../../common/Identification.js";
 
 export default {
@@ -69,22 +70,13 @@ export default {
       token: "",
     };
   },
-  mounted() {
-    axios
-      .post(
-        "http://localhost:5002/api/ProductSpecification/nextSpecification",
-        {
-          ProductId: this.productId,
-          specifications: [0],
-          SpecificationContents: [0],
-        }
-      )
-      .then((response) => {
-        this.specifications = response.data.$values;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  async mounted() {
+    try {
+      const response = await getProductSpecification(this.productId, [0], [0]);
+      this.specifications = response.data.$values;
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     greet: function (event) {
@@ -101,13 +93,10 @@ export default {
     },
     async getSpecification(specificationId) {
       try {
-        const response = await axios.post(
-          "http://localhost:5002/api/ProductSpecification/nextSpecification",
-          {
-            ProductId: this.productId,
-            specifications: [specificationId],
-            SpecificationContents: this.changeSpecification,
-          }
+        const response = await getProductSpecification(
+          this.productId,
+          [specificationId],
+          this.changeSpecification
         );
         if (typeof response.data.quantity !== "number") {
           this.specifications = response.data.$values;
@@ -119,25 +108,16 @@ export default {
     },
     async addCart() {
       console.log(this.token);
-      if (this.token == "") {
+      if (this.token == null) {
         this.message("請先登入", "warning");
       } else {
-        let response = await axios.post(
-          "http://localhost:5002/api/Cart",
-          {
-            InventoryId: this.inventoryId,
-            Quantity: this.quantity,
-            Attribute: 1,
-          },
-          {
-            headers: {
-              Authorization: `Basic ${this.token}`,
-            },
-          }
-        );
-
         try {
-          if (response.response && response.response.status == 200) {
+          const response = await addCart(
+            this.inventoryId,
+            this.quantity,
+            this.token
+          );
+          if (response.response.status == 200) {
             this.message("success add cart", "success");
           } else {
             this.message(response.response.data, "error");

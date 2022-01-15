@@ -1,7 +1,11 @@
 <template>
   <div>
     <el-carousel :interval="4000" type="card" height="200px">
-      <el-carousel-item v-for="product in products" :key="product.id" :item="product">
+      <el-carousel-item
+        v-for="product in products"
+        :key="product.id"
+        :item="product"
+      >
         <h3 class="medium">{{ product.name }}</h3>
       </el-carousel-item>
     </el-carousel>
@@ -28,37 +32,36 @@
 
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-// import carousel from "vue-owl-carousel";
-
-Vue.use(VueAxios, axios);
+import { getProductList } from "../../../api/product";
 
 export default {
   name: "Product",
-  //   components: { carousel },
-  // el: "#products",
   data() {
     return {
       products: null,
       imagePath: "~/img/",
     };
   },
-  mounted() {
-    axios
-      .get("http://localhost:5002/api/Product/1")
-      .then((response) => {
+  async mounted() {
+    await this.getProductList();
+  },
+  methods: {
+    async getProductList() {
+      try {
+        var response = await getProductList(1);
         this.products = response.data.$values;
 
         this.products.forEach((item) => {
-          item.img = this.imagePath + item.id;
+          item.img = imagePath + item.id;
         });
-      })
-      .catch(function (error) {
-        // 请求失败处理
+
+        this.products.forEach((item) => {
+          item.img = imagePath + item.id;
+        });
+      } catch (error) {
         console.log(error);
-      });
+      }
+    },
   },
 };
 </script>

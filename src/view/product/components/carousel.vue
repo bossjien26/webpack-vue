@@ -25,7 +25,7 @@
 </style>
 
 <script>
-import axios from "axios";
+import { getCategoryList } from "../../../api/category";
 
 export default {
   data() {
@@ -37,18 +37,16 @@ export default {
     };
   },
   mounted() {
-    axios
-      .get("http://localhost:5002/api/Category/1")
-      .then((response) => {
-        this.categories = response.data.$values;
-        this.categories.forEach((item) => {
-          item.img = this.imagePath + item.id;
-          item.url = item.id;
-        });
-      })
-      .catch(function (error) {
-        console.log(error);
+    var response = getCategoryList(1);
+    try {
+      this.categories = response.data.$values;
+      this.categories.forEach((item) => {
+        item.img = this.imagePath + item.id;
+        item.url = item.id;
       });
+    } catch (error) {
+      console.log(error);
+    }
   },
   watch: {
     range: function (val) {
