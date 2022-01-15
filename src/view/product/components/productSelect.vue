@@ -107,7 +107,6 @@ export default {
       } catch (error) {}
     },
     async addCart() {
-      console.log(this.token);
       if (this.token == null) {
         this.message("請先登入", "warning");
       } else {

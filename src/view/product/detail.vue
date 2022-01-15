@@ -48,7 +48,6 @@ export default {
     const parsed = queryString.parse(location.search);
     var url = new URL(document.referrer);
     var beforeParsed = url.searchParams.get("categoryId");
-    console.log(beforeParsed);
 
     if (parsed.id != undefined) {
       this.productId = parsed.id;
