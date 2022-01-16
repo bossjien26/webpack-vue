@@ -1,38 +1,23 @@
 const path = require("path");
 var glob = require('glob');
-const { VueLoaderPlugin } = require('vue-loader');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const htmlWebpackPlugin = require('html-webpack-plugin'); // 宣告使用插件
+// const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-let fs = require('fs');
-
-// 
-var getEntry = function (globPath) {
-  var entries = {
-    // vendor: ['jquery', 'react', 'react-dom', './src/app'] // 类库
-  };
-  glob.sync(globPath).forEach(function (entry) {
-    if (entry.split('/').splice(-2)[0] == "index") {
-      entries['index'] = [entry];
-    } else {
-      if (entry.split('/').splice(-2)[1] == "index.js") {
-        var pathname = entry.split('/').splice(-2).join('/').split('.')[0];
-      } else {
-        var pathname = entry.split('/').splice(-2).join('/').split('.')[0] + '/index';
-      }
-      entries[pathname] = [entry];
-    }
-
-  });
-  return entries;
-};
-var isProduction = process.env.NODE_ENV === 'production';
-var entries = getEntry('./src/view/*/*.js');
-var chunks = Object.keys(entries);
-
-module.exports = {
+var config = {
   mode: 'development',
-  entry: entries,
+  entry: path.join(__dirname, 'src/index.js'),
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
+  devServer: {
+    // contentBase: path.resolve(__dirname, 'public'),
+    hot: true,
+    historyApiFallback: true,
+    port: 3000
+  },
   module: {
     rules: [
       {
@@ -59,24 +44,16 @@ module.exports = {
           'vue-style-loader',
           'css-loader'
         ]
-      }
-    ]
-  },
-  // Where to compile the bundle
-  // By default the output directory is `dist`
-  output: {
-    path: path.join(__dirname, "dist"),
-    filename: '[name].bundle.js',
-    publicPath: '/'
-  },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'public'),
-      watch: true,
-    },
-    port: 3000,
-    compress: true,
-    // historyApiFallback: true,
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-inline-loader",
+          },
+        ],
+      },
+    ],
   },
   resolve: {
     extensions: ['.js', '.vue'],
@@ -86,36 +63,15 @@ module.exports = {
     }
   },
   plugins: [
-    // make sure to include the plugin for the magic
     new VueLoaderPlugin(),
-    new Dotenv()
+    new htmlWebpackPlugin({ // 打包HTML
+      template: '/public/index.html'
+    }),
+    new Dotenv(),
+    // new CopyPlugin([
+    //   { from: './src/assets/images', to: 'image' },
+    //   { from: './src/assets/style', to: 'css' }
+    // ])
   ]
 }
-
-// const header = fs.readFileSync('./src/view/layout/header.html');
-// const footer = fs.readFileSync('./src/view/layout/footer.html');
-
-// 生成HTML文件
-chunks.forEach(function (pathname) {
-  if (pathname == 'vendor') {
-    return;
-  }
-  var conf = {
-    title: 'My App',
-    filename: isProduction ? '../view/' + pathname + '.html' : pathname + '.html',
-    template: './public/index.html',
-    inject: 'body',
-    minify: {
-      removeComments: true,
-      collapseWhitespace: false
-    },
-    // header:header,
-    // footer: footer
-  };
-  if (pathname in module.exports.entry) {
-    conf.chunks = ['vendor', pathname];
-    conf.hash = false;
-  }
-  module.exports.plugins.push(new HtmlWebpackPlugin(conf));
-});
-
+module.exports = config

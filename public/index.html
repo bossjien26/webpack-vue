@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, user-scalable=1"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
+    <title><%= webpackConfig.name %></title>
   </head>
   <body>
-    <div id="header"></div>
-    <div class="container">
-      <div id="app"></div>
+    <div id="app">
+      <isheader></isheader>
+      <div class="container">
+        <router-view></router-view>
+      </div>
+      <isfooter></isfooter>
     </div>
-    <div id="footer"></div>
   </body>
 </html>

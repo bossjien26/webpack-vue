@@ -32,9 +32,9 @@
           >
         </el-submenu>
       </el-submenu>
-      <el-menu-item index="3" disabled>Info</el-menu-item>
-      <el-menu-item index="4"
-        ><a href="/about" target="_blank">Orders</a></el-menu-item
+      <!-- <el-menu-item target="_blank" index="3">Info</el-menu-item> -->
+      <el-menu-item index="3" onclick="location.href='/login'"
+        >login</el-menu-item
       >
     </el-menu>
   </div>

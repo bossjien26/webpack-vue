@@ -46,7 +46,7 @@
 <script>
 import { getProductSpecification } from "../../../api/productSpecification";
 import { addCart } from "../../../api/cart";
-import Identification from "../../../common/Identification.js";
+// import Identification from "../../../common/Identification.js";
 
 export default {
   created: function () {
@@ -55,7 +55,7 @@ export default {
     if (parsed.id != undefined) {
       this.productId = parsed.id;
     }
-    this.token = Identification.token;
+    // this.token = Identification.token;
   },
   data() {
     return {
