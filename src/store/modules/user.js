@@ -39,7 +39,7 @@ const actions = {
         const { mail, password } = userInfo;
         // await csrf();
         var response = await authenticate({ mail: mail, password: password });
-        const token = response.data.token.split("|")[1];
+        const token = response.data.token;
         commit("SET_TOKEN", token);
         setToken(token);
     },
@@ -75,5 +75,4 @@ export default {
     state,
     mutations,
     actions
-  };
-  
+};
