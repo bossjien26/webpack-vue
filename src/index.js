@@ -10,7 +10,6 @@ require("babel-core/register");
 require("babel-polyfill");
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
-import store from "./store";
 
 Vue.use(VModel)
 Vue.use(BootstrapVue);
@@ -28,6 +27,7 @@ const about = () => import('./view/about')
 const product = () => import('./view/product')
 const productDetail = () => import('./view/product/detail.js')
 const login = () => import("./view/login");
+const user = () => import("./view/user");
 
 Vue.use(VueRouter)
 Vue.use(Vuex);
@@ -37,13 +37,22 @@ const router = new VueRouter({
     history: true,
     mode: 'history',
     routes: [
-        { path: '/', component: index },
-        { path: '/about', component: about },
-        { path: '/product', component: product },
-        { path: '/detail', component: productDetail },
-        { path: "/login", component: login },
+        { path: '/', component: index, meta: { title: "Store", icon: "dashboard" } },
+        { path: '/about', component: about, meta: { title: "about", icon: "dashboard" } },
+        { path: '/product', component: product, meta: { title: "product", icon: "dashboard" } },
+        { path: '/detail', component: productDetail, meta: { title: "productDetail", icon: "dashboard" } },
+        { path: "/login", component: login, meta: { title: "Login", icon: "dashboard" } },
+        { path: "/user", component: user, meta: { title: "user", icon: "dashboard" } },
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    next();
 })
+
 export default router
 
 new Vue({
