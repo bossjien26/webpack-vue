@@ -9,10 +9,12 @@
     />
   </head>
   <body>
-    <div id="header"></div>
-    <div class="container">
-      <div id="app"></div>
+    <div id="app">
+      <isheader></isheader>
+      <div class="container">
+        <router-view></router-view>
+      </div>
+      <isfooter></isfooter>
     </div>
-    <div id="footer"></div>
   </body>
 </html>
