@@ -1,6 +1,6 @@
 import { reject, resolve } from "core-js/fn/promise";
 import { getToken, setToken, removeToken } from "../../utils/auth";
-import { authenticate, identity, getInfo } from "../../api/user";
+import { authenticate, identity, getInfo, logout } from "../../api/user";
 
 
 const getDefaultState = () => {
@@ -64,6 +64,16 @@ const actions = {
                 reject(error);
             }
         })
+    },
+    async logout({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            logout(state.token).then(() => {
+                commit("RESET_STATE");
+                resolve();
+            }).catch(error => {
+                reject(error);
+            })
+        });
     }
 };
 
