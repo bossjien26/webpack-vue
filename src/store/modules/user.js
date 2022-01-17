@@ -1,6 +1,6 @@
 import { reject, resolve } from "core-js/fn/promise";
 import { getToken, setToken, removeToken } from "../../utils/auth";
-import { authenticate, identity, getInfo } from "../../api/user";
+import { authenticate, identity, getInfo, logout } from "../../api/user";
 
 
 const getDefaultState = () => {
@@ -8,7 +8,7 @@ const getDefaultState = () => {
         token: getToken(),
         name: "",
         avatar: "",
-        roles: []
+        role: 0
     };
 };
 
@@ -28,8 +28,8 @@ const mutations = {
     SET_AVATAR: (state, avatar) => {
         state.avatar = avatar;
     },
-    SET_ROLES: (state, roles) => {
-        state.roles = roles;
+    SET_ROLE: (state, role) => {
+        state.role = role;
     }
 };
 
@@ -44,28 +44,36 @@ const actions = {
         setToken(token);
     },
     async getInfo({ commit, state }) {
+        const { data } = await getInfo(state.token);
         return new Promise((resolve, reject) => {
             try {
-                const { data } = getInfo(state.token);
-
                 if (!data) {
                     reject("Verification failed, please login again.");
                 }
 
-                const { roles, name, avatar } = data;
-
-                if (!roles || roles.length < 0) {
-                    reject("getInfo: roles must be a non-null array!");
+                const { role, name } = data;
+                if (!role) {
+                    reject("getInfo: role must be a non-null !");
                 }
-
-                commit("SET_ROLES", roles);
+                commit("SET_ROLE", role);
                 commit("SET_NAME", name);
-                commit("SET_AVATAR", avatar);
+
+                // commit("SET_AVATAR", avatar);
                 resolve(data);
             } catch (error) {
                 reject(error);
             }
         })
+    },
+    async logout({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            logout(state.token).then(() => {
+                commit("RESET_STATE");
+                resolve();
+            }).catch(error => {
+                reject(error);
+            })
+        });
     }
 };
 
