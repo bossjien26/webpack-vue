@@ -70,7 +70,7 @@ export default {
         var count = 0;
         response.data.$values.forEach((item, index) => {
           item.img = this.imagePath + item.id;
-          item.href = "/product/detail?id=" + item.id;
+          item.href = "/detail?id=" + item.id;
           if (item.id != null) {
             if (count % 3 == 0 && count != 0) {
               this.products.splice(product, 1);
