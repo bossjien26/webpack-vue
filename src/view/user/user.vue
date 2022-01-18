@@ -21,8 +21,11 @@ export default {
   },
   methods: {
     async getUserInfo() {
-      var response = await this.$store.dispatch("user/getInfo");
-      console.log(response);
+      try {
+        await this.$store.dispatch("user/getInfo");
+      } catch (error) {
+        this.$router.push({ path: this.redirect || "/login" });
+      }
     },
   },
 };

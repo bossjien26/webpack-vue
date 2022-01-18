@@ -2,7 +2,7 @@
   <div class="mb-4">
     <el-menu
       :default-active="activeIndex2"
-      class="el-menu-demo"
+      class="el-menu-demo w-100"
       mode="horizontal"
       @select="handleSelect"
       background-color="#545c64"
@@ -32,13 +32,28 @@
           >
         </el-submenu>
       </el-submenu>
-      <!-- <el-menu-item target="_blank" index="3">Info</el-menu-item> -->
-      <el-menu-item index="3" onclick="location.href='/login'"
+
+      <el-menu-item
+        style="float: right"
+        index="3"
+        onclick="location.href='/login'"
+        v-if="!IsLogin"
         >login</el-menu-item
       >
+
+      <el-submenu index="4" style="float: right" v-if="IsLogin">
+        <template slot="title"><i class="el-icon-menu"></i></template>
+        <el-menu-item index="4-1" onclick="location.href='/user'"
+          ><i class="el-icon-setting"></i> Settings</el-menu-item
+        >
+        <el-menu-item index="4-3" @click="logout"
+          ><i class="el-icon-circle-close"></i> logout</el-menu-item
+        >
+      </el-submenu>
     </el-menu>
   </div>
 </template>
+
 <script>
 import { getCategoryList } from "../../api/category";
 
@@ -48,9 +63,11 @@ export default {
       activeIndex: "1",
       activeIndex2: "1",
       categories: null,
+      IsLogin: false,
     };
   },
   created: function () {
+    this.IsLogin = this.$store.state.user.token != undefined ? true : false;
     this.getCategory();
   },
   methods: {
@@ -67,6 +84,14 @@ export default {
         console.log(error);
       }
     },
+    async logout() {
+      try {
+        await this.$store.dispatch("user/logout");
+        this.$router.go(0);
+        this.$router.push({ path: this.redirect || "/" });
+      } catch (error) {}
+    },
+    async getToken() {},
   },
 };
 </script>

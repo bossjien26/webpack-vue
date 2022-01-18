@@ -66,9 +66,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import Vuex from "vuex";
-Vue.use(Vuex);
 export default {
   name: "Login",
   data() {
@@ -95,13 +92,18 @@ export default {
       redirect: undefined,
     };
   },
+  created: function () {
+    if (this.$store.state.user.token != undefined) {
+      this.$router.push({ path: this.redirect || "/user" });
+    }
+  },
   watch: {
-    // $route: {
-    //   handler: function (route) {
-    //     this.redirect = route.query && route.query.redirect;
-    //   },
-    //   immediate: true,
-    // },
+    $route: {
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true,
+    },
   },
   methods: {
     showPwd() {
@@ -121,6 +123,7 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
+              this.$router.go(0);
               this.$router.push({ path: this.redirect || "/user" });
               this.loading = false;
             })

@@ -73,7 +73,7 @@ export default {
   methods: {
     async getProduct() {
       try {
-        let response = getProductDetail(this.productId);
+        let response = await getProductDetail(this.productId);
         this.product = response.data.product;
       } catch (err) {
         console.log(err);

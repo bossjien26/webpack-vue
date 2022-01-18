@@ -54,10 +54,12 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
+import store from "./store";
 
 new Vue({
     el: '#app',
     router,
+    store,
     components: {
         isheader,
         isfooter
