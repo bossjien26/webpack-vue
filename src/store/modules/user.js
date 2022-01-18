@@ -69,6 +69,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             logout(state.token).then(() => {
                 commit("RESET_STATE");
+                removeToken();
                 resolve();
             }).catch(error => {
                 reject(error);
