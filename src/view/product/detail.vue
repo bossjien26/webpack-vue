@@ -40,8 +40,10 @@ import { getProductDetail } from "../../api/product";
 import { getCategoryDetail } from "../../api/category";
 import Carousel from "./components/carousel.vue";
 import productSelect from "./components/productSelect.vue";
+import store from "../../store";
 
 export default {
+  store,
   components: { Carousel, productSelect },
   created: function () {
     const queryString = require("query-string");

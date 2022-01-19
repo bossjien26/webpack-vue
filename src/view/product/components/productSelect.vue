@@ -10,6 +10,7 @@
           placeholder="Select"
           @change="selectGet"
           v-model="changeSpecification[key]"
+          no-data-text="no data"
         >
           <el-option
             v-for="(specificationContent, index) in specification.value
@@ -36,7 +37,7 @@
         class="mt-5"
         @click="addCart"
         type="primary"
-        :disabled="token == ''"
+        :disabled="!IsLogin"
         >Add Cart</el-button
       >
     </el-row>
@@ -46,7 +47,6 @@
 <script>
 import { getProductSpecification } from "../../../api/productSpecification";
 import { addCart } from "../../../api/cart";
-// import Identification from "../../../common/Identification.js";
 
 export default {
   created: function () {
@@ -55,7 +55,7 @@ export default {
     if (parsed.id != undefined) {
       this.productId = parsed.id;
     }
-    // this.token = Identification.token;
+    this.IsLogin = this.$store.state.user.token != undefined ? true : false;
   },
   data() {
     return {
@@ -67,7 +67,7 @@ export default {
       PreviousSpecifications: [4],
       changeSpecification: [],
       inventoryId: 0,
-      token: "",
+      IsLogin: false,
     };
   },
   async mounted() {
@@ -107,19 +107,19 @@ export default {
       } catch (error) {}
     },
     async addCart() {
-      if (this.token == null) {
+      if (!this.IsLogin) {
         this.message("請先登入", "warning");
       } else {
         try {
           const response = await addCart(
             this.inventoryId,
             this.quantity,
-            this.token
+            this.$store.state.user.token
           );
-          if (response.response.status == 200) {
+          if (response.status == "201") {
             this.message("success add cart", "success");
           } else {
-            this.message(response.response.data, "error");
+            this.message(response.data, "error");
           }
         } catch (error) {
           console.log(error);
