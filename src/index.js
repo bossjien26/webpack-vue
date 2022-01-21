@@ -29,6 +29,7 @@ const productDetail = () => import('./view/product/detail.js')
 const login = () => import("./view/login");
 const user = () => import("./view/user");
 const cart = () => import("./view/cart");
+const checkout = () => import("./view/checkout");
 
 Vue.use(VueRouter)
 Vue.use(Vuex);
@@ -45,6 +46,7 @@ const router = new VueRouter({
         { path: "/login", component: login, meta: { title: "Login", icon: "dashboard" } },
         { path: "/user", component: user, meta: { title: "Member", icon: "dashboard" } },
         { path: "/cart", component: cart, meta: { title: "Cart", icon: "dashboard" } },
+        { path: "/checkout", component: checkout, meta: { title: "Checkout", icon: "dashboard" } },
     ]
 });
 
