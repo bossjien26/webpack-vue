@@ -129,6 +129,7 @@ export default {
     },
     message(message, type) {
       this.$message({
+        showClose: true,
         message: message,
         type: type,
       });
