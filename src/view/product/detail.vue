@@ -2,7 +2,7 @@
   <div class="mt-5 mb-5">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item>分類</el-breadcrumb-item>
-      <el-breadcrumb-item
+      <el-breadcrumb-item v-if="category.id != null"
         ><a :href="'/product?categoryId=' + category.id">{{
           category.name
         }}</a></el-breadcrumb-item
@@ -48,14 +48,17 @@ export default {
   created: function () {
     const queryString = require("query-string");
     const parsed = queryString.parse(location.search);
-    var url = new URL(document.referrer);
-    var beforeParsed = url.searchParams.get("categoryId");
 
     if (parsed.id != undefined) {
       this.productId = parsed.id;
     }
-    if (beforeParsed != undefined) {
-      this.categoryId = beforeParsed;
+    if (document.referrer != "") {
+      var url = new URL(document.referrer);
+      var beforeParsed = url.searchParams.get("categoryId");
+
+      if (beforeParsed != undefined) {
+        this.categoryId = beforeParsed;
+      }
     }
   },
   async mounted() {
