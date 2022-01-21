@@ -1,73 +1,87 @@
 <template>
-  <el-table
-    :data="tableData"
-    style="width: 100%"
-    :row-class-name="tableRowClassName"
-  >
-    <template slot="empty">
-      <span>no data</span>
-    </template>
-    <el-table-column prop="$id" header-align="center" align="center" label="#">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      header-align="center"
-      align="center"
-      label="Name"
+  <div>
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      :row-class-name="tableRowClassName"
+      ref="table"
     >
-    </el-table-column>
-    <el-table-column
-      prop="scope"
-      header-align="center"
-      align="center"
-      label="Quality"
-    >
-      <template slot-scope="scope">
-        <el-input-number
-          v-model="scope.row.quantity"
-          @change="handleChange(scope.row.inventoryId, scope.row.quantity)"
-          :min="1"
-          :max="10"
-        ></el-input-number>
+      <template slot="empty">
+        <span>no data</span>
       </template>
-    </el-table-column>
+      <el-table-column
+        prop="$id"
+        header-align="center"
+        align="center"
+        label="#"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        header-align="center"
+        align="center"
+        label="Name"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="scope"
+        header-align="center"
+        align="center"
+        label="Quality"
+      >
+        <template slot-scope="scope">
+          <el-input-number
+            v-model="scope.row.quantity"
+            @change="addCart(scope.row.inventoryId, scope.row.quantity)"
+            :min="1"
+            :max="10"
+          ></el-input-number>
+        </template>
+      </el-table-column>
 
-    <el-table-column
-      header-align="center"
-      align="center"
-      prop="price"
-      label="Price"
-    >
-    </el-table-column>
+      <el-table-column
+        header-align="center"
+        align="center"
+        prop="price"
+        label="Price"
+      >
+      </el-table-column>
 
-    <el-table-column
-      header-align="center"
-      align="center"
-      prop="scope"
-      label="Total"
-    >
-      <template slot-scope="scope">
-        <span>{{ scope.row.price * scope.row.quantity }}</span>
-      </template>
-    </el-table-column>
+      <el-table-column
+        header-align="center"
+        align="center"
+        prop="scope"
+        label="Total"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.price * scope.row.quantity }}</span>
+        </template>
+      </el-table-column>
 
-    <el-table-column
-      header-align="right"
-      align="right"
-      prop="scope"
-      label="label"
-      width="120"
-    >
-      <template slot-scope="scope">
-        <span class="el-dropdown-link">
-          <i
-            class="el-icon-delete"
-            @click="deleteCart(scope.row.inventoryId)"
-          ></i>
-        </span>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column
+        header-align="right"
+        align="right"
+        prop="scope"
+        label="label"
+        width="120"
+      >
+        <template slot-scope="scope">
+          <span class="el-dropdown-link">
+            <i
+              class="el-icon-delete"
+              @click="deleteCart(scope.row.inventoryId)"
+            ></i>
+          </span>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div class="d-flex flex-row-reverse bd-highlight">
+      <el-button type="primary" onclick="location.href='/checkout'" class="mt-5"
+        >結帳</el-button
+      >
+    </div>
+  </div>
 </template>
 
 <style>
@@ -81,7 +95,7 @@
 </style>
 
 <script>
-import { getCart, deleteCart } from "../../api/cart";
+import { getCart, deleteCart, addCart } from "../../api/cart";
 
 export default {
   data() {
@@ -108,9 +122,6 @@ export default {
     handleDetails(index, row) {
       console.log(index, row);
     },
-    handleChange(id, value) {
-      console.log(id);
-    },
     async getCart() {
       try {
         var response = await getCart(1, this.$store.state.user.token);
@@ -122,14 +133,39 @@ export default {
     async deleteCart(inventoryId) {
       try {
         await deleteCart(inventoryId, this.$store.state.user.token);
-        this.reload();
+        location.reload();
       } catch (error) {
         console.log(error);
-        this.$message({
-          message: "Error",
-          type: "error",
-        });
+        this.message("Error", "error");
       }
+    },
+    async addCart(id, value) {
+      if (!this.IsLogin) {
+        this.message("請先登入", "warning");
+      } else {
+        try {
+          const response = await addCart(
+            id,
+            value,
+            this.$store.state.user.token
+          );
+          if (response.status == "201") {
+            this.message("change quantity success", "success");
+          } else {
+            this.message(response.data, "error");
+          }
+        } catch (error) {
+          console.log(error);
+          this.message("Oops,this is error message", "error");
+        }
+      }
+    },
+    message(message, type) {
+      this.$message({
+        showClose: true,
+        message: message,
+        type: type,
+      });
     },
   },
 };
