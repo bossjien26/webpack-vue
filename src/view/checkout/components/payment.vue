@@ -6,18 +6,21 @@
         <b-col>
           <el-input
             v-model="payment.card1"
+            maxlength="4"
             placeholder="信用卡號碼 1-4"
           ></el-input>
         </b-col>
         <b-col>
           <el-input
             v-model="payment.card2"
+            maxlength="4"
             placeholder="信用卡號碼 5-8"
           ></el-input>
         </b-col>
         <b-col>
           <el-input
             v-model="payment.card3"
+            maxlength="4"
             placeholder="信用卡號碼 8-12"
           ></el-input>
         </b-col>
@@ -26,6 +29,7 @@
         <b-col>
           <el-input
             v-model="payment.secret"
+            maxlength="3"
             placeholder="信用卡後三碼"
           ></el-input>
         </b-col>
@@ -33,13 +37,13 @@
           <el-select
             v-model="payment.selectedYear"
             placeholder="選擇到期卡片年份"
+            no-data-text="no data"
           >
             <el-option
               v-for="year in payment.years"
-              :key="year.value"
-              :label="year.label"
-              :value="year.value"
-              no-data-text="no data"
+              :key="year"
+              :label="year"
+              :value="year"
             >
             </el-option>
           </el-select>
@@ -48,13 +52,13 @@
           <el-select
             v-model="payment.selectedMonth"
             placeholder="選擇到期卡片月份"
+            no-data-text="no data"
           >
             <el-option
               v-for="month in payment.months"
-              :key="month.value"
-              :label="month.label"
-              :value="month.value"
-              no-data-text="no data"
+              :key="month"
+              :label="month"
+              :value="month"
             >
             </el-option>
           </el-select>
@@ -73,7 +77,7 @@ export default {
       payment: {
         years: [],
         selectedYear: "",
-        months: [],
+        months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         selectedMonth: "",
         value: "",
         secret: "",
@@ -81,8 +85,13 @@ export default {
         card2: "",
         card3: "",
       },
-      payment: [],
     };
+  },
+  created() {
+    const nowYear = new Date().getFullYear();
+    for (let index = 0; index < 11; index++) {
+      this.payment.years[index] = nowYear + index;
+    }
   },
   watch: {
     payment: {
