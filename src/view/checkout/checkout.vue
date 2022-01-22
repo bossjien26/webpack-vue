@@ -39,6 +39,7 @@ export default {
         recipientMail: "",
         recipientPhone: "",
         sender: "",
+        selectedDelivery: "1",
       },
       payment: {
         years: [],
