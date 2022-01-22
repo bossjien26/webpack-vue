@@ -1,11 +1,6 @@
 <template>
   <div>
-    <el-descriptions
-      title="垂直带边框列表"
-      direction="vertical"
-      :column="4"
-      border
-    >
+    <el-descriptions title="訂購資訊" direction="vertical" :column="4" border>
       <el-descriptions-item label="收件人姓名">{{
         information.recipient
       }}</el-descriptions-item>
