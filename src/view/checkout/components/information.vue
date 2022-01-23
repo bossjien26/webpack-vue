@@ -67,9 +67,10 @@
       <div>
         <div v-for="(delivery, index) in deliveryInfo" :key="index">
           <div v-if="index == 1" class="mt-4"></div>
-          <el-radio v-model="information.selectedDelivery" label="1">{{
-            delivery.title
-          }}</el-radio>
+          <el-radio
+            @click.native.capture="handleChange(delivery.title, delivery.type)"
+            >{{ delivery.title }}</el-radio
+          >
           <el-collapse accordion>
             <el-collapse-item>
               <template slot="title">
@@ -100,10 +101,12 @@ export default {
         recipientMail: "",
         recipientPhone: "",
         sender: "",
-        selectedDelivery: "1",
+        selectedDelivery: {
+          title: "",
+          type: "",
+        },
       },
       deliveryInfo: [],
-      activeNames: ["1"],
     };
   },
   watch: {
@@ -124,8 +127,9 @@ export default {
         this.deliveryInfo = data.$values;
       } catch (error) {}
     },
-    handleChange(val) {
-      console.log(val);
+    handleChange(title, type) {
+      this.selectedDelivery.title = title;
+      this.selectedDelivery.type = type;
     },
   },
 };

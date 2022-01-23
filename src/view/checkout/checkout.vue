@@ -15,7 +15,11 @@
       @checkoutPayment="handlePayment($event)"
       v-show="active == 1"
     ></Payment>
-    <Description :description="information" v-show="active == 2"></Description>
+    <Description
+      :descriptionInformation="information"
+      :descriptionPayment="payment"
+      v-show="active == 2"
+    ></Description>
     <el-button style="margin-top: 12px" @click="previous">上一步</el-button>
     <el-button style="margin-top: 12px" @click="next">{{ nextText }}</el-button>
   </div>
@@ -39,7 +43,10 @@ export default {
         recipientMail: "",
         recipientPhone: "",
         sender: "",
-        selectedDelivery: "1",
+        selectedDelivery: {
+          title: "",
+          type: "",
+        },
       },
       payment: {
         years: [],
@@ -51,7 +58,10 @@ export default {
         card1: "",
         card2: "",
         card3: "",
-        selectedPayment: "",
+        selectedPayment: {
+          title: "",
+          type: "",
+        },
       },
       nextText: "下一步",
     };

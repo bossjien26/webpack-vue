@@ -2,10 +2,14 @@
   <div class="mt-3">
     <el-card>
       <div slot="header">付款資訊</div>
-      <el-radio-group v-model="payment.selectedPayment" style="display: block">
+      <el-radio-group  v-model="payment.selectedPayment.type" style="display: block">
         <div v-for="(payment, index) in paymentInfo" :key="index">
           <div v-if="index == 1" class="mt-4"></div>
-          <el-radio :label="payment.type">{{ payment.title }}</el-radio>
+          <el-radio
+            @click.native.capture="handleChange(payment.title, payment.type)"
+            :label="payment.type"
+            >{{ payment.title }}</el-radio
+          >
           <el-collapse accordion>
             <el-collapse-item>
               <template slot="title">
@@ -19,7 +23,7 @@
         </div>
       </el-radio-group>
 
-      <div v-show="payment.selectedPayment == 2">
+      <div v-show="payment.selectedPayment.type == 2">
         <b-row class="mb-3">
           <b-col>
             <el-input
@@ -103,7 +107,10 @@ export default {
         card1: "",
         card2: "",
         card3: "",
-        selectedPayment: "",
+        selectedPayment: {
+          title: "",
+          type: "",
+        },
       },
       paymentInfo: [],
     };
@@ -131,6 +138,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    handleChange(title, type) {
+      this.payment.selectedPayment.title = title;
+      this.payment.selectedPayment.type = type;
     },
   },
 };
