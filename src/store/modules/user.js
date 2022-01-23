@@ -68,8 +68,8 @@ const actions = {
     async logout({ commit, state }) {
         return new Promise((resolve, reject) => {
             logout(state.token).then(() => {
-                commit("RESET_STATE");
                 removeToken();
+                commit("RESET_STATE");
                 resolve();
             }).catch(error => {
                 reject(error);
