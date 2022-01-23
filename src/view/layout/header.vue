@@ -97,9 +97,9 @@ export default {
       IsLogin: false,
     };
   },
-  created: function () {
+  async created() {
     this.IsLogin = this.$store.state.user.token != undefined ? true : false;
-    this.getCategory();
+    await this.getCategory();
   },
   methods: {
     handleSelect(key, keyPath) {

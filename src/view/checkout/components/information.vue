@@ -114,8 +114,8 @@ export default {
       deep: true,
     },
   },
-  mounted() {
-    this.getDeliveryInfo();
+  async mounted() {
+    await this.getDeliveryInfo();
   },
   methods: {
     async getDeliveryInfo() {
