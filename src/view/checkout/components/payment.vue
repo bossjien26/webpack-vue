@@ -1,69 +1,88 @@
 <template>
   <div class="mt-3">
     <el-card>
-      <div slot="header">信用卡付款資訊</div>
-      <b-row class="mb-3">
-        <b-col>
-          <el-input
-            v-model="payment.card1"
-            maxlength="4"
-            placeholder="信用卡號碼 1-4"
-          ></el-input>
-        </b-col>
-        <b-col>
-          <el-input
-            v-model="payment.card2"
-            maxlength="4"
-            placeholder="信用卡號碼 5-8"
-          ></el-input>
-        </b-col>
-        <b-col>
-          <el-input
-            v-model="payment.card3"
-            maxlength="4"
-            placeholder="信用卡號碼 8-12"
-          ></el-input>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <el-input
-            v-model="payment.secret"
-            maxlength="3"
-            placeholder="信用卡後三碼"
-          ></el-input>
-        </b-col>
-        <b-col>
-          <el-select
-            v-model="payment.selectedYear"
-            placeholder="選擇到期卡片年份"
-            no-data-text="no data"
-          >
-            <el-option
-              v-for="year in payment.years"
-              :key="year"
-              :label="year"
-              :value="year"
+      <div slot="header">付款資訊</div>
+      <el-radio-group v-model="payment.selectedPayment" style="display: block">
+        <div v-for="(payment, index) in paymentInfo" :key="index">
+          <div v-if="index == 1" class="mt-4"></div>
+          <el-radio :label="payment.type">{{ payment.title }}</el-radio>
+          <el-collapse accordion>
+            <el-collapse-item>
+              <template slot="title">
+                {{ payment.introduce }}<i class="header-icon el-icon-info"></i>
+              </template>
+              <div>
+                {{ payment.content }}
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+      </el-radio-group>
+
+      <div v-show="payment.selectedPayment == 2">
+        <b-row class="mb-3">
+          <b-col>
+            <el-input
+              v-model="payment.card1"
+              maxlength="4"
+              placeholder="信用卡號碼 1-4"
+            ></el-input>
+          </b-col>
+          <b-col>
+            <el-input
+              v-model="payment.card2"
+              maxlength="4"
+              placeholder="信用卡號碼 5-8"
+            ></el-input>
+          </b-col>
+          <b-col>
+            <el-input
+              v-model="payment.card3"
+              maxlength="4"
+              placeholder="信用卡號碼 8-12"
+            ></el-input>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <el-input
+              v-model="payment.secret"
+              maxlength="3"
+              placeholder="信用卡後三碼"
+            ></el-input>
+          </b-col>
+          <b-col>
+            <el-select
+              v-model="payment.selectedYear"
+              placeholder="選擇到期卡片年份"
+              no-data-text="no data"
             >
-            </el-option>
-          </el-select>
-        </b-col>
-        <b-col>
-          <el-select
-            v-model="payment.selectedMonth"
-            placeholder="選擇到期卡片月份"
-            no-data-text="no data"
-          >
-            <el-option
-              v-for="month in payment.months"
-              :key="month"
-              :label="month"
-              :value="month"
+              <el-option
+                v-for="year in payment.years"
+                :key="year"
+                :label="year"
+                :value="year"
+              >
+              </el-option>
+            </el-select>
+          </b-col>
+          <b-col>
+            <el-select
+              v-model="payment.selectedMonth"
+              placeholder="選擇到期卡片月份"
+              no-data-text="no data"
             >
-            </el-option>
-          </el-select>
-        </b-col>
-      </b-row>
+              <el-option
+                v-for="month in payment.months"
+                :key="month"
+                :label="month"
+                :value="month"
+              >
+              </el-option>
+            </el-select>
+          </b-col>
+        </b-row>
+      </div>
     </el-card>
   </div>
 </template>
@@ -84,14 +103,17 @@ export default {
         card1: "",
         card2: "",
         card3: "",
+        selectedPayment: "",
       },
+      paymentInfo: [],
     };
   },
-  created() {
+  async created() {
     const nowYear = new Date().getFullYear();
     for (let index = 0; index < 11; index++) {
       this.payment.years[index] = nowYear + index;
     }
+    await this.getPaymentInfo();
   },
   watch: {
     payment: {
@@ -104,7 +126,8 @@ export default {
   methods: {
     async getPaymentInfo() {
       try {
-        this.payment = await getPaymentInfo();
+        const { data } = await getPaymentInfo();
+        this.paymentInfo = data.$values;
       } catch (error) {
         console.log(error);
       }
