@@ -17,7 +17,7 @@
     ></Payment>
     <Description :description="information" v-show="active == 2"></Description>
     <el-button style="margin-top: 12px" @click="previous">上一步</el-button>
-    <el-button style="margin-top: 12px" @click="next">下一步</el-button>
+    <el-button style="margin-top: 12px" @click="next">{{ nextText }}</el-button>
   </div>
 </template>
 
@@ -44,20 +44,22 @@ export default {
       payment: {
         years: [],
         selectedYear: "",
-        months: [],
+        months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         selectedMonth: "",
         value: "",
         secret: "",
         card1: "",
         card2: "",
         card3: "",
+        selectedPayment: "",
       },
+      nextText: "下一步",
     };
   },
   methods: {
-    next() {
-      if (this.active > 2) {
-        this.active = 0;
+    next(event) {
+      if (this.active >= 2) {
+        this.nextText = "送出";
       } else {
         this.active++;
       }
@@ -70,6 +72,7 @@ export default {
       } else {
         this.active--;
       }
+      this.nextText = "下一步";
     },
     handleCheckoutInformation: function (data) {
       this.information = data;
