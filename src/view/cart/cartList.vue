@@ -9,12 +9,10 @@
       <template slot="empty">
         <span>no data</span>
       </template>
-      <el-table-column
-        prop="$id"
-        header-align="center"
-        align="center"
-        label="#"
-      >
+      <el-table-column header-align="center" align="center" label="#">
+        <template slot-scope="scope">
+          <span>{{ scope.$index + 1 }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="name"
