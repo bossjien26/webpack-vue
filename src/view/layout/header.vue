@@ -32,6 +32,9 @@
           >
         </el-submenu>
       </el-submenu>
+      <el-menu-item index="6" onclick="location.href='/order'"
+        >Order</el-menu-item
+      >
 
       <el-menu-item
         style="float: right"

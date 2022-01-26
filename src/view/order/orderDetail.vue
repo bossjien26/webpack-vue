@@ -1,0 +1,49 @@
+<template>
+  <div></div>
+</template>
+
+<script>
+import { getOrderDetail } from "../../api/order";
+import dayjs from "dayjs";
+
+export default {
+  data() {
+    return {
+      orderInfo: {
+        id: 0,
+      },
+    };
+  },
+  created: function () {
+    var url = new URL(document.referrer);
+    var id = url.searchParams.get("id");
+    if (id != undefined) {
+      this.id = id;
+    }
+  },
+  async mounted() {
+    await this.getOrderDetail();
+  },
+  methods: {
+    async getOrderDetail() {
+      try {
+        const { data } = await getOrderDetail(this.id);
+        this.orderInfo = data.$values;
+        this.orderInfo.createAt = dayjs(this.orderInfo.createAt).format(
+          "YYYY-MM-DD HH:mm:ss"
+        );
+      } catch (error) {
+        console.log(error);
+        this.message("error", "error");
+      }
+    },
+    message(message, type) {
+      this.$message({
+        showClose: true,
+        message: message,
+        type: type,
+      });
+    },
+  },
+};
+</script>

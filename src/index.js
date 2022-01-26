@@ -6,6 +6,7 @@ import BootstrapVue from "bootstrap-vue";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import VModel from 'vue-js-modal'
+import Dayjs from 'vue-dayjs';
 require("babel-core/register");
 require("babel-polyfill");
 import "bootstrap/dist/css/bootstrap.css";
@@ -15,6 +16,7 @@ Vue.use(VModel)
 Vue.use(BootstrapVue);
 Vue.use(ElementUI);
 Vue.use(Vuex);
+Vue.use(Dayjs);
 
 import isheader from './view/layout/header.vue'
 import isfooter from './view/layout/footer.vue'
@@ -30,6 +32,8 @@ const login = () => import("./view/login");
 const user = () => import("./view/user");
 const cart = () => import("./view/cart");
 const checkout = () => import("./view/checkout");
+const order = () => import("./view/order");
+const orderDetail = () => import("./view/order/orderDetail.js");
 
 Vue.use(VueRouter)
 Vue.use(Vuex);
@@ -47,6 +51,8 @@ const router = new VueRouter({
         { path: "/user", component: user, meta: { title: "Member", icon: "dashboard" } },
         { path: "/cart", component: cart, meta: { title: "Cart", icon: "dashboard" } },
         { path: "/checkout", component: checkout, meta: { title: "Checkout", icon: "dashboard" } },
+        { path: "/order", component: order, meta: { title: "Order", icon: "dashboard" } },
+        { path: "/orderDetail", component: orderDetail, meta: { title: "OrderDetail", icon: "dashboard" } },
     ]
 });
 
