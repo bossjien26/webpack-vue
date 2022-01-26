@@ -3,7 +3,7 @@
     <el-steps :active="active" finish-status="success">
       <el-step title="步骤 1"></el-step>
       <el-step title="步骤 2"></el-step>
-      <el-step title="步骤 3"></el-step>
+      <el-step title="確認資訊"></el-step>
     </el-steps>
 
     <CartList></CartList>
@@ -21,7 +21,12 @@
       v-show="active == 2"
     ></Description>
     <el-button style="margin-top: 12px" @click="previous">上一步</el-button>
-    <el-button style="margin-top: 12px" @click="next">{{ nextText }}</el-button>
+    <el-button
+      style="margin-top: 12px"
+      v-loading.fullscreen.lock="fullscreenLoading"
+      @click="next"
+      >{{ nextText }}</el-button
+    >
   </div>
 </template>
 
@@ -33,6 +38,9 @@ import Payment from "./components/payment.vue";
 import { orderInsert } from "../../api/order";
 import { orderInventoryInsert } from "../../api/orderInventory";
 import { orderPayInsert } from "../../api/orderPay";
+import { Loading } from "element-ui";
+// Loading.service(options);
+
 export default {
   data() {
     return {
@@ -65,13 +73,12 @@ export default {
           type: "",
         },
       },
+      fullscreenLoading: false,
       nextText: "下一步",
     };
   },
   methods: {
     async next() {
-      console.log(this.active);
-
       if (this.active >= 1) {
         this.nextText = "送出";
       }
@@ -84,8 +91,6 @@ export default {
       }
     },
     previous() {
-      console.log(this.active);
-
       if (this.active <= 0) {
         this.active = 0;
       } else {
@@ -101,6 +106,7 @@ export default {
       console.log(data);
     },
     async orderInsert() {
+      this.fullscreenLoading = true;
       const order = {
         country: this.information.country,
         city: this.information.city,
@@ -114,6 +120,13 @@ export default {
         var { data } = await orderInsert(order);
         await this.orderInventoryInsert(data.id);
         await this.orderPayInsert(data.id);
+        this.$notify({
+          title: "Success",
+          message: "Success Create Order!",
+          type: "success",
+        });
+        this.fullscreenLoading = false;
+        this.$router.push({ path: this.redirect || "/order" });
       } catch (error) {
         console.log(error);
         this.$message({
@@ -121,6 +134,7 @@ export default {
           message: "Error",
           type: "error",
         });
+        this.fullscreenLoading = false;
       }
     },
     async orderInventoryInsert(id) {
