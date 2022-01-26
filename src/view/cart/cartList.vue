@@ -30,9 +30,8 @@
         <template slot-scope="scope">
           <el-input-number
             v-model="scope.row.quantity"
-            @change="addCart(scope.row.inventoryId, scope.row.quantity)"
+            @change="changeQuantity(scope.row.inventoryId, scope.row.quantity)"
             :min="1"
-            :max="10"
           ></el-input-number>
         </template>
       </el-table-column>
@@ -93,7 +92,7 @@
 </style>
 
 <script>
-import { getCart, deleteCart, addCart } from "../../api/cart";
+import { getCart, deleteCart, changeQuantity } from "../../api/cart";
 
 export default {
   data() {
@@ -137,15 +136,14 @@ export default {
         this.message("Error", "error");
       }
     },
-    async addCart(id, value) {
+    async changeQuantity(id, value) {
       if (!this.IsLogin) {
         this.message("請先登入", "warning");
       } else {
         try {
-          const response = await addCart(
+          const response = await changeQuantity(
             id,
             value,
-            this.$store.state.user.token
           );
           if (response.status == "201") {
             this.message("change quantity success", "success");
