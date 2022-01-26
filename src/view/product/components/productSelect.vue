@@ -114,7 +114,6 @@ export default {
           const response = await addCart(
             this.inventoryId,
             this.quantity,
-            this.$store.state.user.token
           );
           if (response.status == "201") {
             this.message("success add cart", "success");
