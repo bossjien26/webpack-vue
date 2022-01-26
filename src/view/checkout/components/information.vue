@@ -65,23 +65,32 @@
     <el-card class="mt-5">
       <div slot="header">選擇送貨方式</div>
       <div>
-        <div v-for="(delivery, index) in deliveryInfo" :key="index">
-          <div v-if="index == 1" class="mt-4"></div>
-          <el-radio
-            @click.native.capture="handleChange(delivery.title, delivery.type)"
-            >{{ delivery.title }}</el-radio
-          >
-          <el-collapse accordion>
-            <el-collapse-item>
-              <template slot="title">
-                {{ delivery.introduce }}<i class="header-icon el-icon-info"></i>
-              </template>
-              <div>
-                {{ delivery.content }}
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </div>
+        <el-radio-group
+          v-model="information.selectedDelivery.type"
+          style="display: block"
+        >
+          <div v-for="(delivery, index) in deliveryInfo" :key="index">
+            <div v-if="index == 1" class="mt-4"></div>
+            <el-radio
+              @click.native.capture="
+                handleChange(delivery.title, delivery.type)
+              "
+              :label="delivery.type"
+              >{{ delivery.title }}</el-radio
+            >
+            <el-collapse accordion>
+              <el-collapse-item>
+                <template slot="title">
+                  {{ delivery.introduce
+                  }}<i class="header-icon el-icon-info"></i>
+                </template>
+                <div>
+                  {{ delivery.content }}
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </el-radio-group>
       </div>
     </el-card>
   </div>
@@ -128,8 +137,8 @@ export default {
       } catch (error) {}
     },
     handleChange(title, type) {
-      this.selectedDelivery.title = title;
-      this.selectedDelivery.type = type;
+      this.information.selectedDelivery.title = title;
+      this.information.selectedDelivery.type = type;
     },
   },
 };

@@ -30,7 +30,9 @@ import CartList from "./components/cartList.vue";
 import Information from "./components/information.vue";
 import Description from "./components/description.vue";
 import Payment from "./components/payment.vue";
-
+import { orderInsert } from "../../api/order";
+import { orderInventoryInsert } from "../../api/orderInventory";
+import { orderPayInsert } from "../../api/orderPay";
 export default {
   data() {
     return {
@@ -67,10 +69,17 @@ export default {
     };
   },
   methods: {
-    next(event) {
-      if (this.active >= 2) {
+    async next() {
+      console.log(this.active);
+
+      if (this.active >= 1) {
         this.nextText = "送出";
-      } else {
+      }
+
+      if (this.active == 2) {
+        await this.orderInsert();
+      }
+      if (this.active < 2) {
         this.active++;
       }
     },
@@ -90,6 +99,38 @@ export default {
     handlePayment: function (data) {
       this.payment = data;
       console.log(data);
+    },
+    async orderInsert() {
+      const order = {
+        country: this.information.country,
+        city: this.information.city,
+        street: this.information.street,
+        recipient: this.information.recipient,
+        recipientMail: this.information.recipientMail,
+        recipientPhone: this.information.recipientPhone,
+        sender: this.information.sender,
+      };
+      try {
+        var { data } = await orderInsert(order);
+        await this.orderInventoryInsert(data.id);
+        await this.orderPayInsert(data.id);
+      } catch (error) {
+        console.log(error);
+        this.$message({
+          showClose: true,
+          message: "Error",
+          type: "error",
+        });
+      }
+    },
+    async orderInventoryInsert(id) {
+      await orderInventoryInsert({ orderId: id });
+    },
+    async orderPayInsert(id) {
+      await orderPayInsert({
+        orderId: id,
+        Terms: this.payment.selectedPayment.type,
+      });
     },
   },
   components: { CartList, Information, Description, Payment },
