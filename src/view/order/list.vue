@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="tableData" style="width: 100%">
+  <el-table v-loading="loading" :data="tableData" style="width: 100%">
     <template slot="empty">
       <span>no data</span>
     </template>
@@ -30,6 +30,7 @@ export default {
       tableData: [],
       search: "",
       page: 1,
+      loading: true,
     };
   },
   async mounted() {
@@ -53,6 +54,7 @@ export default {
         console.log(error);
         this.message("error", "error");
       }
+      this.loading = false;
     },
     message(message, type) {
       this.$message({
