@@ -8,7 +8,7 @@ export function getOrder(page) {
 }
 
 export function getOrderDetail(orderId) {
-    var url = "/order/" + orderId;
+    var url = "/order/show/" + orderId;
     return request({
         url,
         method: "Get",
