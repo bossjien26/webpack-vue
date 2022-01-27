@@ -38,8 +38,8 @@ import Payment from "./components/payment.vue";
 import { orderInsert } from "../../api/order";
 import { orderInventoryInsert } from "../../api/orderInventory";
 import { orderPayInsert } from "../../api/orderPay";
+import { orderDeliveryInsert } from "../../api/orderDelivery";
 import { Loading } from "element-ui";
-// Loading.service(options);
 
 export default {
   data() {
@@ -103,7 +103,6 @@ export default {
     },
     handlePayment: function (data) {
       this.payment = data;
-      console.log(data);
     },
     async orderInsert() {
       this.fullscreenLoading = true;
@@ -119,13 +118,13 @@ export default {
       try {
         var { data } = await orderInsert(order);
         await this.orderInventoryInsert(data.id);
+        await this.orderDeliveryInsert(data.id);
         await this.orderPayInsert(data.id);
         this.$notify({
           title: "Success",
           message: "Success Create Order!",
           type: "success",
         });
-        this.fullscreenLoading = false;
         this.$router.push({ path: this.redirect || "/order" });
       } catch (error) {
         console.log(error);
@@ -134,8 +133,8 @@ export default {
           message: "Error",
           type: "error",
         });
-        this.fullscreenLoading = false;
       }
+      this.fullscreenLoading = false;
     },
     async orderInventoryInsert(id) {
       await orderInventoryInsert({ orderId: id });
@@ -144,6 +143,12 @@ export default {
       await orderPayInsert({
         orderId: id,
         Terms: this.payment.selectedPayment.type,
+      });
+    },
+    async orderDeliveryInsert(id) {
+      await orderDeliveryInsert({
+        orderId: id,
+        type: this.information.selectedDelivery.type,
       });
     },
   },
