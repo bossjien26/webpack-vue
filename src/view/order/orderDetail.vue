@@ -1,5 +1,6 @@
 <template>
   <div>
+    <inventoryList :orderInfo="orderInfo" />
     <Description :orderInfo="orderInfo" />
   </div>
 </template>
@@ -7,6 +8,7 @@
 <script>
 import { getOrderDetail } from "../../api/order";
 import Description from "./components/description.vue";
+import inventoryList from "./components/inventoryList.vue";
 import dayjs from "dayjs";
 
 export default {
@@ -19,6 +21,7 @@ export default {
   },
   components: {
     Description,
+    inventoryList,
   },
   created: function () {
     var url = new URL(document.URL);

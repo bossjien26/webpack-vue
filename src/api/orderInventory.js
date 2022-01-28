@@ -7,3 +7,10 @@ export function orderInventoryInsert(params) {
         data:params
     })
 }
+
+export function getOrderInventory(orderId) {
+    return request({
+        method: "GET",
+        url: "/orderInventory/show/" + orderId
+    });
+}
