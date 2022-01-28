@@ -27,7 +27,7 @@
         prop="quantity"
         header-align="center"
         align="center"
-        label="Quality"
+        label="Quantity"
       >
       </el-table-column>
 

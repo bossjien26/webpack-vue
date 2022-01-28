@@ -25,7 +25,7 @@
         prop="scope"
         header-align="center"
         align="center"
-        label="Quality"
+        label="Quantity"
       >
         <template slot-scope="scope">
           <el-input-number
