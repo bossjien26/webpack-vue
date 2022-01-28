@@ -1,9 +1,12 @@
 <template>
-  <div></div>
+  <div>
+    <Description :orderInfo="orderInfo" />
+  </div>
 </template>
 
 <script>
 import { getOrderDetail } from "../../api/order";
+import Description from "./components/description.vue";
 import dayjs from "dayjs";
 
 export default {
@@ -14,8 +17,11 @@ export default {
       },
     };
   },
+  components: {
+    Description,
+  },
   created: function () {
-    var url = new URL(document.referrer);
+    var url = new URL(document.URL);
     var id = url.searchParams.get("id");
     if (id != undefined) {
       this.id = id;
@@ -28,7 +34,7 @@ export default {
     async getOrderDetail() {
       try {
         const { data } = await getOrderDetail(this.id);
-        this.orderInfo = data.$values;
+        this.orderInfo = data;
         this.orderInfo.createAt = dayjs(this.orderInfo.createAt).format(
           "YYYY-MM-DD HH:mm:ss"
         );
