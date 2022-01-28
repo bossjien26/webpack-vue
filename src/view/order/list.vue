@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     getDetail(orderId) {
-      console.log(orderId);
       this.$router.push({
         path: this.redirect || "/orderDetail?id=" + orderId,
       });
