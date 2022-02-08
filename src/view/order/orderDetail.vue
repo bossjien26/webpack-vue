@@ -2,6 +2,7 @@
   <div>
     <inventoryList :orderInfo="orderInfo" />
     <Description :orderInfo="orderInfo" />
+    <orderStatusesTimeLine />
   </div>
 </template>
 
@@ -9,6 +10,7 @@
 import { getOrderDetail } from "../../api/order";
 import Description from "./components/description.vue";
 import inventoryList from "./components/inventoryList.vue";
+import orderStatusesTimeLine from "./components/orderStatusesTimeLine.vue";
 import dayjs from "dayjs";
 
 export default {
@@ -22,6 +24,7 @@ export default {
   components: {
     Description,
     inventoryList,
+    orderStatusesTimeLine
   },
   created: function () {
     var url = new URL(document.URL);
