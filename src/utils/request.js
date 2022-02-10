@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Message } from "element-ui";
 import store from "../store";
-import { getToken } from "./auth";
+import { getToken, removeToken } from "./auth";
 
 // create an axios instance
 const service = axios.create({
@@ -44,7 +44,6 @@ service.interceptors.response.use(
    */
   response => {
     const res = response;
-
     // if the custom code is not 20000, it is judged as an error.
     if (response.status >= 400) {
       Message({
@@ -73,6 +72,9 @@ service.interceptors.response.use(
   },
   error => {
     console.log("err" + error); // for debug
+    if (error.request.status === 401) {
+      removeToken();
+    }
     Message({
       message: error.message,
       type: "error",
