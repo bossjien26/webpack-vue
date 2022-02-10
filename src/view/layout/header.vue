@@ -32,7 +32,7 @@
           >
         </el-submenu>
       </el-submenu>
-      <el-menu-item index="6" onclick="location.href='/order'"
+      <el-menu-item index="6" v-if="IsLogin" onclick="location.href='/order'"
         >Order</el-menu-item
       >
 
@@ -43,7 +43,7 @@
         v-if="!IsLogin"
         >login</el-menu-item
       >
-      <el-submenu index="4" style="float: right">
+      <el-submenu index="4" v-if="IsLogin" style="float: right">
         <template slot="title">
           <!-- <i class="el-icon-menu"></i> -->
           <svg
@@ -106,9 +106,10 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
-      if (key.split("-")[1] == "all") {
-        location.href = "/product?categoryId=" + key.split("-")[0];
-      }
+      const categoryId =
+        key.split("-")[1] === "all" ? key.split("-")[0] : key.split("-")[1];
+      location.href = "/product?categoryId=" + categoryId;
+      // this.$router.push(`/product?categoryId=${categoryId}`);
     },
     async getCategory() {
       const response = await getCategoryList(1);
@@ -125,7 +126,6 @@ export default {
         this.$router.push({ path: this.redirect || "/" });
       } catch (error) {}
     },
-    async getToken() {},
   },
 };
 </script>
