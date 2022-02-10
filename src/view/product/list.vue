@@ -40,7 +40,7 @@
 
 <script>
 import { getProductCategory } from "../../api/product";
-import { getCategoryList } from "../../api/category";
+import { getCategoryDetail } from "../../api/category";
 
 export default {
   data() {
@@ -87,7 +87,7 @@ export default {
     },
     async getCategory() {
       try {
-        var response = await getCategoryList(this.categoryId);
+        var response = await getCategoryDetail(this.categoryId);
         this.category = response.data;
       } catch (error) {}
     },
