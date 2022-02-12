@@ -9,6 +9,7 @@
     <CartList></CartList>
     <Information
       v-show="active == 0"
+      @isFormRule="handleIsFormRule($event)"
       @checkoutInformation="handleCheckoutInformation($event)"
     ></Information>
     <Payment
@@ -20,10 +21,16 @@
       :descriptionPayment="payment"
       v-show="active == 2"
     ></Description>
-    <el-button style="margin-top: 12px" @click="previous">上一步</el-button>
+    <el-button
+      style="margin-top: 12px"
+      :disabled="active === 0"
+      @click="previous"
+      >上一步</el-button
+    >
     <el-button
       style="margin-top: 12px"
       v-loading.fullscreen.lock="fullscreenLoading"
+      :disabled="!isFormRule"
       @click="next"
       >{{ nextText }}</el-button
     >
@@ -45,6 +52,7 @@ export default {
   data() {
     return {
       active: 0,
+      isFormRule: false,
       information: {
         country: "",
         city: "",
@@ -79,15 +87,17 @@ export default {
   },
   methods: {
     async next() {
-      if (this.active >= 1) {
-        this.nextText = "送出";
-      }
+      if (this.isFormRule) {
+        if (this.active >= 1) {
+          this.nextText = "送出";
+        }
 
-      if (this.active == 2) {
-        await this.orderInsert();
-      }
-      if (this.active < 2) {
-        this.active++;
+        if (this.active == 2) {
+          await this.orderInsert();
+        }
+        if (this.active < 2) {
+          this.active++;
+        }
       }
     },
     previous() {
@@ -150,6 +160,9 @@ export default {
         orderId: id,
         type: this.information.selectedDelivery.type,
       });
+    },
+    handleIsFormRule: function (data) {
+      this.isFormRule = data;
     },
   },
   components: { CartList, Information, Description, Payment },
