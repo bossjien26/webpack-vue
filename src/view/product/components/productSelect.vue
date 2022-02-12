@@ -28,7 +28,7 @@
       <el-input-number
         v-model="quantity"
         :min="1"
-        :max="10"
+        :max="maxQuantity"
         class="mt-5"
       ></el-input-number>
     </el-row>
@@ -37,7 +37,7 @@
         class="mt-5"
         @click="addCart"
         type="primary"
-        :disabled="!IsLogin"
+        :disabled="!IsLogin || inventoryId === 0"
         >Add Cart</el-button
       >
     </el-row>
@@ -61,7 +61,8 @@ export default {
     return {
       product: null,
       productName: "",
-      quantity: 0,
+      quantity: 1,
+      maxQuantity:1,
       productId: 0,
       specifications: null,
       PreviousSpecifications: [4],
@@ -102,7 +103,7 @@ export default {
           this.specifications = response.data.$values;
         } else {
           this.inventoryId = response.data.id;
-          this.quantity = response.data.quantity;
+          this.maxQuantity = response.data.quantity;
         }
       } catch (error) {}
     },
