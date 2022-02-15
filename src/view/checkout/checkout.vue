@@ -14,6 +14,7 @@
     ></Information>
     <Payment
       @checkoutPayment="handlePayment($event)"
+      @isPaymentRule="handleIsPaymentRule($event)"
       v-show="active == 1"
     ></Payment>
     <Description
@@ -30,7 +31,9 @@
     <el-button
       style="margin-top: 12px"
       v-loading.fullscreen.lock="fullscreenLoading"
-      :disabled="!isFormRule"
+      :disabled="
+        (!isFormRule && active == 0) || (!isPaymentRule && active == 1)
+      "
       @click="next"
       >{{ nextText }}</el-button
     >
@@ -53,6 +56,7 @@ export default {
     return {
       active: 0,
       isFormRule: false,
+      isPaymentRule: false,
       information: {
         country: "",
         city: "",
@@ -113,6 +117,9 @@ export default {
     },
     handlePayment: function (data) {
       this.payment = data;
+    },
+    handleIsPaymentRule: function (data) {
+      this.isPaymentRule = data;
     },
     async orderInsert() {
       this.fullscreenLoading = true;
