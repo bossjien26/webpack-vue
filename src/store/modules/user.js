@@ -7,6 +7,7 @@ const getDefaultState = () => {
     return {
         token: getToken(),
         name: "",
+        mail: "",
         avatar: "",
         role: 0
     };
@@ -24,6 +25,9 @@ const mutations = {
     },
     SET_NAME: (state, name) => {
         state.name = name;
+    },
+    SET_MAIL: (state, mail) => {
+        state.mail = mail;
     },
     SET_AVATAR: (state, avatar) => {
         state.avatar = avatar;
@@ -51,12 +55,13 @@ const actions = {
                     reject("Verification failed, please login again.");
                 }
 
-                const { role, name } = data;
+                const { role, name, mail } = data;
                 if (!role) {
                     reject("getInfo: role must be a non-null !");
                 }
                 commit("SET_ROLE", role);
                 commit("SET_NAME", name);
+                commit("SET_MAIL", mail);
 
                 // commit("SET_AVATAR", avatar);
                 resolve(data);

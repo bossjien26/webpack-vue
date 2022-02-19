@@ -1,31 +1,29 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
-    <div class="dashboard-text">
-      role:
-      <span>{{ role }}</span>
-    </div>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="Info" name="first"><Info /></el-tab-pane>
+      <el-tab-pane label="Detail" name="second"><Detail /></el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import Info from "./components/info.vue";
+import Detail from "./components/detail.vue";
 
 export default {
-  name: "Dashboard",
-  computed: {
-    ...mapGetters(["name", "role"]),
+  data() {
+    return {
+      activeName: "first",
+    };
   },
-  created() {
-    this.getUserInfo();
+  components: {
+    Info,
+    Detail,
   },
   methods: {
-    async getUserInfo() {
-      try {
-        await this.$store.dispatch("user/getInfo");
-      } catch (error) {
-        this.$router.push({ path: this.redirect || "/login" });
-      }
+    handleClick(tab, event) {
+      console.log(tab, event);
     },
   },
 };
