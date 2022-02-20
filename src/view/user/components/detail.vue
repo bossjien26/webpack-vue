@@ -49,21 +49,20 @@ export default {
     },
     async created() {
       try {
-        await created(this.userDetail);
+        this.userDetail = await created(this.userDetail);
       } catch (error) {
         this.$message.error("ERROR");
       }
     },
     async updated() {
       try {
-        await updated(this.userDetail);
+        this.userDetail = await updated(this.userDetail);
       } catch (error) {
         this.$message.error("ERROR");
       }
     },
     async save() {
-      this.userDetail =
-        this.userDetail.id === 0 ? await this.created() : await this.updated();
+      this.userDetail.id === 0 ? await this.created() : await this.updated();
     },
   },
 };
