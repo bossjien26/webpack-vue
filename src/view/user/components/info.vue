@@ -10,10 +10,10 @@
       <el-input v-model="userInfo.mail"></el-input>
     </el-form-item>
 
-    <el-form-item label="姓名" prop="name">
+    <el-form-item label="Name" prop="name">
       <el-input v-model="userInfo.name"></el-input>
     </el-form-item>
-    <el-form-item label="角色">
+    <el-form-item label="Role">
       <span>{{ userInfo.roleName }}</span>
     </el-form-item>
   </el-form>
