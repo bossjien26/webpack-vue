@@ -1,0 +1,19 @@
+version: '3.4'
+
+volumes:
+  datafiles:
+
+services:
+  cart_web:
+    container_name: cart_web
+    image: cart_web
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/root/.npm/_logs
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    
