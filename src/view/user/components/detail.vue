@@ -50,6 +50,11 @@ export default {
     async created() {
       try {
         this.userDetail = await created(this.userDetail);
+        this.$notify({
+          title: "Success",
+          message: "success save",
+          type: "success",
+        });
       } catch (error) {
         this.$message.error("ERROR");
       }
@@ -57,6 +62,11 @@ export default {
     async updated() {
       try {
         this.userDetail = await updated(this.userDetail);
+        this.$notify({
+          title: "Success",
+          message: "success save",
+          type: "success",
+        });
       } catch (error) {
         this.$message.error("ERROR");
       }
