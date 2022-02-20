@@ -7,7 +7,8 @@
     class="demo-userInfo"
   >
     <el-form-item label="Mail" prop="mail">
-      <el-input v-model="userInfo.mail"></el-input>
+      <!-- <el-input v-model="userInfo.mail"></el-input> -->
+      <span>{{ userInfo.mail }}</span>
     </el-form-item>
 
     <el-form-item label="Name" prop="name">
@@ -16,11 +17,14 @@
     <el-form-item label="Role">
       <span>{{ userInfo.roleName }}</span>
     </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click.native="save">save</el-button>
+    </el-form-item>
   </el-form>
 </template>
 
 <script>
-import { getInfo } from "../../../api/user";
+import { getInfo, updated } from "../../../api/user";
 export default {
   name: "Dashboard",
   data() {
@@ -47,6 +51,19 @@ export default {
         this.userInfo = data;
       } catch (error) {
         console.log(error);
+      }
+    },
+    async save() {
+      try {
+        const { data } = await updated(this.userInfo);
+        this.userInfo = data;
+        this.$notify({
+          title: "Success",
+          message: "success save",
+          type: "success",
+        });
+      } catch (error) {
+        this.$message.error("ERROR");
       }
     },
   },

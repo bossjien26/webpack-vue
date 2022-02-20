@@ -8,6 +8,14 @@ export function authenticate(userInfo) {
     });
 }
 
+export function updated(data) {
+    return request({
+        url: "/user",
+        method: "PUT",
+        data: data
+    });
+}
+
 export function getInfo() {
     return request({
         url: "/User/info",
